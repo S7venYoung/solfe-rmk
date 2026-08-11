@@ -1,5 +1,7 @@
 [toolchain]
-channel = "stable"
+# RMK v0.8.2 was released against the December 2025 toolchain. Newer Rust
+# 1.97 changes Pin inference used by RMK's matrix implementation.
+channel = "1.92.0"
 components = ["rust-src", "llvm-tools"]
 targets = ["thumbv7em-none-eabihf"]
 profile = "minimal"
