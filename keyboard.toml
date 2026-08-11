@@ -1,0 +1,117 @@
+[keyboard]
+name = "Sofle Dongle DYA"
+product_name = "Sofle Dongle DYA (RMK)"
+vendor_id = 0x4c4b
+product_id = 0x5346
+manufacturer = "S7venYoung"
+chip = "nrf52840"
+
+# The ZMK transform is a 5x14 logical matrix. Column 6 is reserved for
+# pointing events and is therefore left transparent in the RMK keymap.
+[layout]
+rows = 5
+cols = 14
+layers = 4
+keymap = [
+  [
+    ["Escape", "Kc1", "Kc2", "Kc3", "Kc4", "Kc5", "MouseUp",    "Kc6", "Kc7", "Kc8", "Kc9", "Kc0", "LeftBracket", "_"],
+    ["Tab", "Q", "W", "E", "R", "T", "MouseDown",             "Y", "U", "I", "O", "P", "Backspace", "_"],
+    ["LGui", "A", "S", "D", "F", "G", "MouseLeft",          "H", "J", "K", "L", "Semicolon", "Enter", "_"],
+    ["MT(Delete, LShift)", "Z", "X", "C", "V", "B", "MouseRight", "N", "M", "Comma", "Dot", "Slash", "MT(RightBracket, RShift)", "_"],
+    ["AudioMute", "NextKeyboardLayoutSelect", "LCtrl", "LAlt", "LT(2, Delete)", "Space", "MouseBtn1", "LT(1, Escape)", "Space", "Enter", "Minus", "Equal", "_", "_"]
+  ],
+  [
+    ["Grave", "F1", "F2", "F3", "F4", "F5", "Up",    "F6", "F7", "F8", "F9", "F10", "Backslash", "_"],
+    ["_", "Grave", "MouseBtn1", "MouseBtn3", "MouseBtn2", "MouseBtn4", "Down", "PageUp", "End", "Up", "Home", "Minus", "Equal", "_"],
+    ["_", "Kc1", "Kc2", "Kc3", "Kc4", "Kc5", "Left", "PageDown", "Left", "Down", "Right", "LeftBracket", "RightBracket", "_"],
+    ["_", "_", "_", "_", "_", "_", "Right", "_", "_", "Insert", "F11", "F12", "_", "_"],
+    ["AudioMute", "_", "_", "_", "_", "_", "MouseBtn1", "_", "_", "_", "_", "_", "_", "_"]
+  ],
+  [
+    ["Grave", "User0", "User1", "User2", "User3", "User4", "MouseBtn1", "F6", "F7", "F8", "F9", "F10", "_", "_"],
+    ["_", "User7", "User7", "_", "_", "_", "MouseBtn3", "_", "End", "Up", "Home", "Minus", "Equal", "_"],
+    ["_", "OutputUsb", "OutputBluetooth", "_", "_", "Delete", "MouseBtn4", "_", "Left", "Down", "Right", "LeftBracket", "RightBracket", "_"],
+    ["_", "Reboot", "_", "Bootloader", "_", "KpEnter", "MouseBtn5", "_", "_", "Reboot", "_", "Bootloader", "_", "_"],
+    ["_", "_", "_", "_", "_", "_", "MouseBtn2", "_", "_", "_", "_", "_", "_", "_"]
+  ],
+  [
+    ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+    ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+    ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+    ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+    ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+  ]
+]
+
+# Only the left EC11 is present in the source shield. ZMK uses P1.10/P1.14.
+encoder_map = [
+  [["AudioVolUp", "AudioVolDown"]],
+  [["AudioVolUp", "AudioVolDown"]],
+  [["MouseWheelDown", "MouseWheelUp"]],
+  [["MouseWheelDown", "MouseWheelUp"]]
+]
+
+[storage]
+
+[ble]
+enabled = true
+default_tx_power = 8
+
+[behavior.morse]
+enable_flow_tap = true
+prior_idle_time = "150ms"
+hold_timeout = "220ms"
+gap_timeout = "220ms"
+
+[rmk]
+ble_profiles_num = 5
+
+[split]
+connection = "ble"
+
+# The dongle has no switch matrix. RMK accepts a zero-sized direct-pin matrix,
+# allowing it to remain the USB/BLE central just like ZMK's mock kscan.
+[split.central]
+rows = 0
+cols = 0
+row_offset = 0
+col_offset = 0
+
+[split.central.matrix]
+matrix_type = "direct_pin"
+direct_pins = []
+
+# Left half: ZMK gpio rows P0.19/P0.08/P0.12/P0.11/P1.09,
+# columns P0.03/P0.28/P0.30/P0.21/P0.23/P0.22, col2row.
+[[split.peripheral]]
+rows = 5
+cols = 6
+row_offset = 0
+col_offset = 0
+
+[split.peripheral.matrix]
+matrix_type = "normal"
+row_pins = ["P0_19", "P0_08", "P0_12", "P0_11", "P1_09"]
+col_pins = ["P0_03", "P0_28", "P0_30", "P0_21", "P0_23", "P0_22"]
+debouncer = "fast"
+
+[[split.peripheral.input_device.encoder]]
+pin_a = "P1_10"
+pin_b = "P1_14"
+internal_pullup = true
+phase = "resolution"
+resolution = 2
+reverse = false
+
+# Right half: its seven columns occupy logical columns 7..13.
+[[split.peripheral]]
+rows = 5
+cols = 7
+row_offset = 0
+col_offset = 7
+
+[split.peripheral.matrix]
+matrix_type = "normal"
+row_pins = ["P0_19", "P0_08", "P0_12", "P0_11", "P1_09"]
+col_pins = ["P0_22", "P0_29", "P0_03", "P0_28", "P0_30", "P0_21", "P0_23"]
+debouncer = "fast"
