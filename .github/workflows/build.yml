@@ -1,0 +1,67 @@
+name: Build RMK firmware
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "keyboard.toml"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - "memory.x"
+      - "build.rs"
+      - "vial.json"
+      - "src/**"
+      - ".cargo/**"
+      - ".github/workflows/build.yml"
+  pull_request:
+    paths:
+      - "keyboard.toml"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - "memory.x"
+      - "build.rs"
+      - "vial.json"
+      - "src/**"
+      - ".cargo/**"
+      - ".github/workflows/build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install firmware tools
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-make,cargo-binutils,cargo-hex-to-uf2,flip-link
+
+      - name: Build all UF2 images
+        run: cargo make uf2
+
+      - name: Give images hardware-specific names
+        run: |
+          mkdir -p firmware
+          cp rmk-central.uf2 firmware/sofle-dongle-rmk.uf2
+          cp rmk-peripheral.uf2 firmware/sofle-left-rmk.uf2
+          cp rmk-peripheral2.uf2 firmware/sofle-right-rmk.uf2
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sofle-dongle-rmk-${{ github.sha }}
+          path: firmware/*.uf2
+          if-no-files-found: error
+          retention-days: 30
