@@ -35,10 +35,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      # RMK's generated keycode metadata can overflow rustc's default worker
+      # stack in optimized builds on GitHub-hosted runners.
+      RUST_MIN_STACK: 16777216
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Cache Cargo
         uses: Swatinem/rust-cache@v2
