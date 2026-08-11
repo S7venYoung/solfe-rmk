@@ -18,7 +18,7 @@ keymap = [
     ["Tab", "Q", "W", "E", "R", "T", "MouseDown",             "Y", "U", "I", "O", "P", "Backspace", "_"],
     ["LGui", "A", "S", "D", "F", "G", "MouseLeft",          "H", "J", "K", "L", "Semicolon", "Enter", "_"],
     ["MT(Delete, LShift)", "Z", "X", "C", "V", "B", "MouseRight", "N", "M", "Comma", "Dot", "Slash", "MT(RightBracket, RShift)", "_"],
-    ["AudioMute", "NextKeyboardLayoutSelect", "LCtrl", "LAlt", "LT(2, Delete)", "Space", "MouseBtn1", "LT(1, Escape)", "Space", "Enter", "Minus", "Equal", "_", "_"]
+    ["AudioMute", "_", "LCtrl", "LAlt", "LT(2, Delete)", "Space", "MouseBtn1", "LT(1, Escape)", "Space", "Enter", "Minus", "Equal", "_", "_"]
   ],
   [
     ["Grave", "F1", "F2", "F3", "F4", "F5", "Up",    "F6", "F7", "F8", "F9", "F10", "Backslash", "_"],
